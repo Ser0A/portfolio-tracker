@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <title>Mijn Portfolio</title>
+</head>
+<body class="bg-gray-950 text-white min-h-screen p-10">
+
+    <h1 class="text-3xl font-bold mb-8">Mijn Portfolio</h1>
+
+    <table class="w-full text-left border-collapse">
+        <thead>
+            <tr class="bg-gray-800 text-gray-400 uppercase text-sm">
+                <th class="px-6 py-4">Naam</th>
+                <th class="px-6 py-4">Live Prijs</th>
+                <th class="px-6 py-4">Waarde</th>
+                <th class="px-6 py-4">Winst/Verlies</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for rij in portfolio %}
+            <tr class="border-b border-gray-800 hover:bg-gray-900">
+                <td class="px-6 py-4">{{ rij[0] }}</td>
+                <td class="px-6 py-4">€{{ rij[1] }}</td>
+                <td class="px-6 py-4">€{{ rij[2] }}</td>
+                <td class="px-6 py-4">€{{ rij[3] }}</td>
+            </tr>
+            {% endfor %}
+            <tr class="bg-gray-800 font-bold">
+                <td class="px-6 py-4" colspan="3">Totaal W/V</td>
+                <td class="px-6 py-4">€{{ totaal }}</td>
+            </tr>
+        </tbody>
+    </table>
+<canvas id="portfolioChart" class="mt-10" width="400" height="200"></canvas>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    const ctx = document.getElementById('portfolioChart').getContext('2d');
+    new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: {{ portfolio | map(attribute=0) | list | tojson }},
+            datasets: [{
+                label: 'Waarde (€)',
+                data: {{ portfolio | map(attribute=2) | list | tojson }},
+                backgroundColor: ['#6366f1', '#f59e0b', '#10b981']
+            }]
+        },
+        options: {},
+        responsive: true
+    });
+</script>
+</body>
+</html>
